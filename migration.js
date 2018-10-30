@@ -1,9 +1,24 @@
+// set up sqlite
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');
+
+// can turn off journalling while we're developing
+// change some options for speed while we're developing
+db.run('pragma journal_mode=off');
+db.run('pragma temp_store = 2');
+db.run('pragma SYNCHRONOUS = off');
+db.run('PRAGMA foreign_keys = ON');
 
 // run one command after another.  This makes sure dropping the table completes
 // before trying to create it again
 db.serialize(() => {
+
+
+db.get('PRAGMA foreign_keys', function(err, res) {
+    console.log('pragma res is ' + res.foreign_keys);
+});
+// disable foreign key support so we can drop the table
+db.run('PRAGMA foreign_keys = OFF');
 
 // ----- First we'll freshen up the current database
 	// drop the Artist table
@@ -21,6 +36,8 @@ db.serialize(() => {
 		if(err){ throw err }
 		console.log('Dropped Issue table')
 	});
+
+
 
 // ----- Next we'll create the tables
 // Create the Artist Table
@@ -44,22 +61,30 @@ db.run(`CREATE TABLE Series (
 					console.log('Series table created');
 });
 // Create the Issue Table
-// TODO - Add foreign key constraints and set the ON UPDATE and ON DELETE actions
+// Notice the foreign key definitions on artist_id and series_id
+// if the artist is deleted, but there are still issues under their name,
+// the delete should be restricted
+// if the id for the artist or series changes, update the value here too.
 db.run(`CREATE TABLE Issue (
 				id INTEGER PRIMARY KEY NOT NULL,
 				name TEXT NOT NULL,
 				issue_number TEXT NOT NULL,
 				publication_date TEXT NOT NULL,
 				artist_id INTEGER NOT NULL,
-				series_id INTEGER NOT NULL
+				series_id INTEGER NOT NULL,
+				FOREIGN KEY (artist_id) REFERENCES Artist(id),
+				FOREIGN KEY (series_id) REFERENCES Series(id)
 		)`, (err) => {
 					if (err) {throw err}
 					console.log('Issue table created');
 });
 
 
-
-
-
+// TODO - finally seed the database here -- run seed.js manually for now
 
 });
+
+
+
+
+

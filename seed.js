@@ -1,6 +1,7 @@
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database('./database.sqlite');
 
+
 let artistId, seriesId;
 
 
@@ -53,4 +54,6 @@ db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='Artist'", (e
     });
   }
 });
+
+
 
