@@ -13,10 +13,6 @@ db.run('PRAGMA foreign_keys = ON');
 // before trying to create it again
 db.serialize(() => {
 
-
-db.get('PRAGMA foreign_keys', function(err, res) {
-    console.log('pragma res is ' + res.foreign_keys);
-});
 // disable foreign key support so we can drop the table
 db.run('PRAGMA foreign_keys = OFF');
 
@@ -78,7 +74,6 @@ db.run(`CREATE TABLE Issue (
 					if (err) {throw err}
 					console.log('Issue table created');
 });
-
 
 // TODO - finally seed the database here -- run seed.js manually for now
 
