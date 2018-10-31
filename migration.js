@@ -1,3 +1,8 @@
+/*
+Used to create the database tables.
+Run manually with node migration.js
+*/
+
 // set up sqlite
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');

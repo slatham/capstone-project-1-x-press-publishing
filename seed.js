@@ -1,3 +1,8 @@
+/*
+Used to seed the database
+run after the migration script to add some dummy data
+*/
+
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database('./database.sqlite');
 
