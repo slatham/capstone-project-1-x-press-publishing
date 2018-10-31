@@ -38,8 +38,6 @@ db.run('PRAGMA foreign_keys = OFF');
 		console.log('Dropped Issue table')
 	});
 
-
-
 // ----- Next we'll create the tables
 // Create the Artist Table
 db.run(`CREATE TABLE Artist (
@@ -79,8 +77,6 @@ db.run(`CREATE TABLE Issue (
 					if (err) {throw err}
 					console.log('Issue table created');
 });
-
-// TODO - finally seed the database here -- run seed.js manually for now
 
 });
 
