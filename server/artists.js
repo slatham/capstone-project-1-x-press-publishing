@@ -13,6 +13,7 @@ artistsRouter.get('/',(req,res,next) => {
 	
 	// run the db function and set a callback function
 	// to deal with the results afterwards
+	// this deals wit the asynchronous nature of the db request
 	db.getAllWorkingArtists(results => {
 
 		return res.status(200).json({artists: results});
