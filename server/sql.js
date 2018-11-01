@@ -44,4 +44,29 @@ return new Promise ((resolve, reject) => {
 		});
 });
 }
-module.exports = { getAllWorkingArtists, getAllSeries };
+
+
+const getArtistById = (table,id) => {
+
+	return new Promise ((resolve,reject) => {
+
+		db.get('SELECT * FROM Artist WHERE id = $id',{
+			
+			$id : id
+
+
+		},(err,row) => {
+
+			if(err) {
+				throw new Error(err);
+			}
+
+
+			resolve(row);
+
+		});
+
+	});
+}
+
+module.exports = { getAllWorkingArtists, getAllSeries, getArtistById  };

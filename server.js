@@ -30,8 +30,8 @@ app.use('/api',apiRouter);
 //it takes 4 arguments
 app.use(function(error, req, res, next) {
   // deal with the error
-  console.log(error);
-  res.json({ message: error.message });
+  //console.log(error.status);
+  res.status(error.status).json({ message: error.message });
 });
 
 // configure the port to listen on
