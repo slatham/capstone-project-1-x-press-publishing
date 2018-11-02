@@ -69,4 +69,107 @@ const getArtistById = (table,id) => {
 	});
 }
 
-module.exports = { getAllWorkingArtists, getAllSeries, getArtistById  };
+const addNewArtist = (post) => {
+	
+	return new Promise ((resolve,reject) => {
+
+		db.run('INSERT INTO Artist (name,date_of_birth,biography,is_currently_employed) \
+							VALUES ($name,$date_of_birth,$biography,$is_currently_employed)',{
+			
+			$name : post.artist.name,
+			$date_of_birth : post.artist.dateOfBirth,
+			$biography : post.artist.biography,
+			$is_currently_employed : post.artist.isCurrentlyEmployed
+
+		},function (err) {
+
+			if(err) {
+				throw new Error(err);
+			}
+
+			// get the new artist with this.lastID
+			db.get('SELECT * FROM Artist where id = $id', { $id : this.lastID },function(err,row){
+
+
+				if(err) {
+					throw new Error(err);
+				}
+
+
+				resolve(row);
+
+
+			});
+
+
+			
+
+		});
+
+	});
+}
+
+const deleteArtist = (id) => {
+
+	return new Promise ((resolve,reject) => {
+
+		db.run('UPDATE Artist SET is_currently_employed = 0 WHERE id = $id',{
+			
+			$id : id
+
+		},(err) => {
+
+			if(err) {
+				throw new Error(err);
+			}
+
+			db.get('SELECT * FROM Artist WHERE id = $id', { $id : id }, (err,row) =>{
+			if(err) {
+				throw new Error(err);
+			}
+
+				resolve(row);
+			});
+			
+
+		});
+
+	});
+}
+
+const updateArtist = (put,id) => {
+
+	return new Promise ((resolve,reject) => {
+
+		db.run('UPDATE Artist SET name = $name, \
+								date_of_birth = $date_of_birth, \
+								biography = $biography \
+				WHERE id = $id',{ 
+								
+							$name : put.artist.name,
+							$date_of_birth : put.artist.dateOfBirth,
+							$biography : put.artist.biography,
+							$id : id
+
+
+		},(err) => {
+
+			if(err) {
+				throw new Error(err);
+			}
+
+			db.get('SELECT * FROM Artist WHERE id = $id', { $id : id }, (err,row) =>{
+			if(err) {
+				throw new Error(err);
+			}
+
+				resolve(row);
+			});
+			
+
+		});
+
+	});
+}
+
+module.exports = { getAllWorkingArtists, getAllSeries, getArtistById, addNewArtist, deleteArtist, updateArtist };
