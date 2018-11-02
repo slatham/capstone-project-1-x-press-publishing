@@ -32,7 +32,7 @@ artistsRouter.param('id', async (req,res,next,id) => {
 	// get the artist by Id from the database
 	try {
 		// wait for the promise
-		const artistReturned = await db.getArtistById("Artist", id);
+		const artistReturned = await db.getById('Artist',id);
 		// Check if the artist was returned okay
 		if (artistReturned) {
 			// set the modelReturned on the request 

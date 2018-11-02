@@ -30,7 +30,7 @@ app.use('/api',apiRouter);
 //it takes 4 arguments
 app.use(function(error, req, res, next) {
   // deal with the error
-  //console.log(error.status);
+  console.log(error);
   res.status(error.status).json({ message: error.message });
 });
 

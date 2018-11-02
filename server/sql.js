@@ -45,22 +45,18 @@ return new Promise ((resolve, reject) => {
 });
 }
 
-
-const getArtistById = (table,id) => {
+// get something from the database by id
+const getById = (model, id) => {
 
 	return new Promise ((resolve,reject) => {
 
-		db.get('SELECT * FROM Artist WHERE id = $id',{
-			
-			$id : id
+		const sql = `SELECT * FROM ${model} WHERE id = ${id}`;
 
-
-		},(err,row) => {
+		db.get(sql,(err,row) => {
 
 			if(err) {
 				throw new Error(err);
 			}
-
 
 			resolve(row);
 
@@ -109,6 +105,44 @@ const addNewArtist = (post) => {
 	});
 }
 
+const addNewSeries = (post) => {
+	
+	return new Promise ((resolve,reject) => {
+
+		db.run('INSERT INTO Series (name,description) \
+							VALUES ($name,$description)',{
+			
+			$name : post.series.name,
+			$description : post.series.description,
+
+		},function (err) {
+
+			if(err) {
+				throw new Error(err);
+			}
+
+			// get the new series with this.lastID
+			db.get('SELECT * FROM Series where id = $id', { $id : this.lastID },function(err,row){
+
+
+				if(err) {
+					throw new Error(err);
+				}
+
+
+				resolve(row);
+
+
+			});
+
+
+			
+
+		});
+
+	});
+}
+
 const deleteArtist = (id) => {
 
 	return new Promise ((resolve,reject) => {
@@ -136,6 +170,9 @@ const deleteArtist = (id) => {
 
 	});
 }
+
+
+
 
 const updateArtist = (put,id) => {
 
@@ -172,4 +209,38 @@ const updateArtist = (put,id) => {
 	});
 }
 
-module.exports = { getAllWorkingArtists, getAllSeries, getArtistById, addNewArtist, deleteArtist, updateArtist };
+const updateSeries = (put,id) => {
+
+	return new Promise ((resolve,reject) => {
+
+		db.run('UPDATE Series SET name = $name, \
+								description = $description \
+				WHERE id = $id',{ 
+								
+							$name : put.series.name,
+							$description : put.series.description,
+							$id : id
+
+
+		},(err) => {
+
+			if(err) {
+				throw new Error(err);
+			}
+
+			
+			db.get('SELECT * FROM Series WHERE id = $id', { $id : id }, (err,row) =>{
+			if(err) {
+				throw new Error(err);
+			}
+
+				resolve(row);
+			});
+			
+
+		});
+
+	});
+}
+
+module.exports = { getAllWorkingArtists, getAllSeries, getById, addNewArtist, deleteArtist, updateArtist , addNewSeries, updateSeries};
