@@ -261,5 +261,46 @@ const getAllIssuesBySeriesId = (id) => {
 	});
 }
 
+const addNewIssue = (post,seriesId) => {
+	
+	return new Promise ((resolve,reject) => {
+		
+		db.run('INSERT INTO Issue (name,issue_number,publication_date,artist_id,series_id) \
+							VALUES ($name,$issue_number,$publication_date,$artist_id,$series_id)',{
+			
+			$name : post.issue.name,
+			$issue_number : post.issue.issueNumber,
+			$publication_date : post.issue.publicationDate,
+			$artist_id : post.issue.artistId,
+			$series_id : seriesId
 
-module.exports = { getAllWorkingArtists, getAllSeries, getById, addNewArtist, deleteArtist, updateArtist , addNewSeries, updateSeries, getAllIssuesBySeriesId};
+		},function (err) {
+
+			if(err) {
+				throw new Error(err);
+			}
+
+			// get the new series with this.lastID
+			db.get('SELECT * FROM Issue where id = $id', { $id : this.lastID },function(err,row){
+
+
+				if(err) {
+					throw new Error(err);
+				}
+
+
+				resolve(row);
+
+
+			});
+
+
+			
+
+		});
+
+	});
+}
+
+
+module.exports = { getAllWorkingArtists, getAllSeries, getById, addNewArtist, deleteArtist, updateArtist , addNewSeries, updateSeries, getAllIssuesBySeriesId, addNewIssue};
