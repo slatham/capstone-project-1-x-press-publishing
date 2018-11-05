@@ -101,16 +101,16 @@ seriesRouter.post('/', checkValidInput, async (req,res,next)=>{
 
 seriesRouter.delete('/:id', async (req,res,next) => {
 
-	try {
-		// try the promise and wait for it to return
-		const results = await db.deleteSeries('Series',req.seriesReturned.id);
-		// return the results
-		return res.status(200).json({series: results});
-	} catch (e) {
-		// send the error to the error handler middle-ware
-		next(e)
-	}
-
+	// try {
+	// 	// try the promise and wait for it to return
+	// 	const results = await db.deleteSeries('Series',req.seriesReturned.id);
+	// 	// return the results
+	// 	return res.status(200).json({series: results});
+	// } catch (e) {
+	// 	// send the error to the error handler middle-ware
+	// 	next(e)
+	// }
+next()
 
 });
 

@@ -2,6 +2,9 @@
 const sqlite3 = require('sqlite3');
 const db = new sqlite3.Database(process.env.TEST_DATABASE || './database.sqlite');
 
+
+//TODO - DRY this code.  
+
 // db function to return all artists
 // this is an example of how to handle
 // async operations with callbacks.
@@ -57,7 +60,7 @@ const getById = (model, id) => {
 			if(err) {
 				throw new Error(err);
 			}
-
+			console.log(row)
 			resolve(row);
 
 		});
@@ -84,7 +87,7 @@ const addNewArtist = (post) => {
 			}
 
 			// get the new artist with this.lastID
-			db.get('SELECT * FROM Artist where id = $id', { $id : this.lastID },function(err,row){
+			db.get('SELECT * FROM Artist where id = $id', { $id : this.lastID },function(err,row){ //TODO - These should use the getByID method
 
 
 				if(err) {
@@ -142,6 +145,15 @@ const addNewSeries = (post) => {
 
 	});
 }
+
+const deleteSeries = (id) => {
+
+
+	resolve();
+}
+
+
+
 
 const deleteArtist = (id) => {
 
@@ -253,7 +265,7 @@ const getAllIssuesBySeriesId = (id) => {
 			if(err) {
 				throw new Error(err);
 			}
-			console.log(row)
+			
 			resolve(row);
 
 		});
@@ -302,5 +314,44 @@ const addNewIssue = (post,seriesId) => {
 	});
 }
 
+const updateIssue = (put,id) => {
 
-module.exports = { getAllWorkingArtists, getAllSeries, getById, addNewArtist, deleteArtist, updateArtist , addNewSeries, updateSeries, getAllIssuesBySeriesId, addNewIssue};
+	return new Promise ((resolve,reject) => {
+
+		db.run('UPDATE Issue SET name = $name, \
+									issue_number = $issue_number,\
+									publication_date = $publication_date, \
+									artist_id = $artist_id, \
+									series_id = $series_id \
+				WHERE id = $id',{ 
+								
+							$name : put.issue.name,
+							$issue_number : put.issue.issueNumber,
+							$publication_date : put.issue.publicationDate,
+							$artist_id : put.issue.artistId,
+							$series_id : put.issue.seriesId,
+							$id : id
+
+
+		},(err) => {
+
+			if(err) {
+				throw new Error(err);
+			}
+
+			db.get('SELECT * FROM Issue WHERE id = $id', { $id : id }, (err,row) =>{
+			if(err) {
+				throw new Error(err);
+			}
+				
+				resolve(row);
+			});
+			
+
+		});
+
+	});
+}
+
+
+module.exports = { getAllWorkingArtists, getAllSeries, getById, addNewArtist, deleteArtist, updateArtist , addNewSeries, updateSeries, getAllIssuesBySeriesId, addNewIssue, updateIssue};
