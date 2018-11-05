@@ -4,6 +4,12 @@ const db = require('./sql')
 const seriesRouter = require('express').Router();
 module.exports = seriesRouter;
 
+// set up the issues router with a merge on the router param
+// of this series router
+const issuesRouter =  require('./issues');
+seriesRouter.use('/:id/issues', issuesRouter);
+
+
 const checkValidInput = (req,res,next) => {
 
 	// check we have all the supplied posted values
@@ -45,6 +51,12 @@ seriesRouter.param('id', async (req,res,next,id) => {
 	}
 
 });
+
+
+
+
+
+
 
 
 // set up the route for GET /api/series
@@ -117,3 +129,7 @@ seriesRouter.put('/:id', checkValidInput, async (req,res,next) => {
 
 
 });
+
+
+
+

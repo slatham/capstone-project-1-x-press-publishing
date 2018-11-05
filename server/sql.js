@@ -243,4 +243,23 @@ const updateSeries = (put,id) => {
 	});
 }
 
-module.exports = { getAllWorkingArtists, getAllSeries, getById, addNewArtist, deleteArtist, updateArtist , addNewSeries, updateSeries};
+
+const getAllIssuesBySeriesId = (id) => {
+	
+	return new Promise ((resolve,reject) => {
+
+		db.all('SELECT * FROM Issue where series_id = $id',{$id : id},(err,row) => {
+
+			if(err) {
+				throw new Error(err);
+			}
+			console.log(row)
+			resolve(row);
+
+		});
+
+	});
+}
+
+
+module.exports = { getAllWorkingArtists, getAllSeries, getById, addNewArtist, deleteArtist, updateArtist , addNewSeries, updateSeries, getAllIssuesBySeriesId};
