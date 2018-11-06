@@ -146,11 +146,7 @@ const addNewSeries = (post) => {
 	});
 }
 
-const deleteSeries = (id) => {
 
-
-	resolve();
-}
 
 
 
@@ -353,5 +349,49 @@ const updateIssue = (put,id) => {
 	});
 }
 
+const deleteIssue = (id) => {
 
-module.exports = { getAllWorkingArtists, getAllSeries, getById, addNewArtist, deleteArtist, updateArtist , addNewSeries, updateSeries, getAllIssuesBySeriesId, addNewIssue, updateIssue};
+	return new Promise ((resolve,reject) => {
+
+		db.run('DELETE FROM Issue WHERE id = $id',{
+			
+			$id : id
+
+		},(err) => {
+
+			if(err) {
+				throw new Error(err);
+			}
+
+			resolve()
+			
+
+		});
+
+	});
+}
+
+
+const deleteSeries = (id) => {
+
+	return new Promise ((resolve,reject) => {
+
+		db.run('DELETE FROM Series WHERE id = $id',{
+			
+			$id : id
+
+		},(err) => {
+
+			if(err) {
+				throw new Error(err);
+			}
+
+			resolve()
+			
+
+		});
+
+	});
+}
+
+module.exports = { getAllWorkingArtists, getAllSeries, getById, addNewArtist, deleteArtist, updateArtist , addNewSeries, updateSeries, getAllIssuesBySeriesId, addNewIssue, updateIssue, deleteIssue, deleteSeries};

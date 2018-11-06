@@ -100,17 +100,28 @@ seriesRouter.post('/', checkValidInput, async (req,res,next)=>{
 });
 
 seriesRouter.delete('/:id', async (req,res,next) => {
+console.log('Delete')
+	try {
+		const issues = await db.getAllIssuesBySeriesId(req.seriesReturned.id);
+		console.log(issues.length);
 
-	// try {
-	// 	// try the promise and wait for it to return
-	// 	const results = await db.deleteSeries('Series',req.seriesReturned.id);
-	// 	// return the results
-	// 	return res.status(200).json({series: results});
-	// } catch (e) {
-	// 	// send the error to the error handler middle-ware
-	// 	next(e)
-	// }
-next()
+		if (issues.length === 0){
+
+		// try the promise and wait for it to return
+		const results = await db.deleteSeries(req.seriesReturned.id);
+		// return the results
+		return res.status(204).send();
+		
+		} else {
+
+			return res.status(400).send();
+
+		}
+	} catch (e) {
+		// send the error to the error handler middle-ware
+		next(e)
+	}
+
 
 });
 

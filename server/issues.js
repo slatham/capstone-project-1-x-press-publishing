@@ -3,6 +3,26 @@ const db = require('./sql')
 // set up the router
 const issuesRouter = require('express').Router({mergeParams:true});
 
+
+const checkValidInput = (req,res,next) => {
+console.log(req.body.issue)
+	// check we have all the supplied posted values
+	const name = req.body.issue.name;
+	const issueNumber = req.body.issue.issueNumber;
+	const publicationDate = req.body.issue.publicationDate;
+	const artistId = req.body.issue.artistId;
+
+	req.body.issue.seriesId = req.seriesReturned.id;
+	// do the check
+	if(!name || !issueNumber || !publicationDate || !artistId ) {
+		return res.status(400).send();
+	}
+
+	next()
+
+
+}
+
 issuesRouter.param('id', async (req,res,next,id) =>{
 
 
@@ -47,7 +67,7 @@ issuesRouter.get('/', async (req,res,next) => {
 });
 
 
-issuesRouter.post('/', async (req,res,next)=>{
+issuesRouter.post('/', checkValidInput, async (req,res,next)=>{
 
 	try {
 		const seriesId = req.seriesReturned.id;
@@ -62,7 +82,7 @@ issuesRouter.post('/', async (req,res,next)=>{
 
 });
 
-issuesRouter.put('/:id', async (req,res,next) =>{
+issuesRouter.put('/:id', checkValidInput, async (req,res,next) =>{
 
 	try {
 		
@@ -73,6 +93,21 @@ issuesRouter.put('/:id', async (req,res,next) =>{
 		next(e);
 	}
 
+
+
+});
+
+issuesRouter.delete('/:id', async (req,res,next) => {
+
+	try {
+		// try the promise and wait for it to return
+		const results = await db.deleteIssue(req.issueReturned.id);
+		// return the results
+		return res.status(204).send();
+	} catch (e) {
+		// send the error to the error handler middle-ware
+		next(e)
+	}
 
 
 });
