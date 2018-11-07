@@ -61,7 +61,7 @@ issuesRouter.get('/', async (req,res,next) => {
 	
 	try {
 		// because we have merge parameters set to true we can access the 
-		// series id handled by the router param funtion in
+		// series id handled by the router param function in
 		// series.js
 		// assign the series id
 		const seriesId = req.seriesReturned.id;
@@ -81,7 +81,7 @@ issuesRouter.post('/', checkValidInput, async (req,res,next)=>{
 
 	try {
 		// because we have merge parameters set to true we can access the 
-		// series id handled by the router param funtion in
+		// series id handled by the router param function in
 		// series.js
 		// assign the series id
 		const seriesId = req.seriesReturned.id;
@@ -113,8 +113,8 @@ issuesRouter.put('/:id', checkValidInput, async (req,res,next) =>{
 });
 
 // express route to delete an issue by id.  Note
-// the async becuase the deleteIssue function is
-// asunchronous and my take a while to complete/
+// the async because the deleteIssue function is
+// asynchronous and my take a while to complete/
 issuesRouter.delete('/:id', async (req,res,next) => {
 
 	try {

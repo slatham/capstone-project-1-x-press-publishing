@@ -78,7 +78,7 @@ const getById = (model, id) => {
 
 // add an artist to the database taking a POST
 // request.  The POST is the req.body and is handled
-// by the body parser middleware
+// by the body parser middle-ware
 const addNewArtist = (post) => {
 	// set up the promise
 	return new Promise ((resolve,reject) => {
@@ -125,7 +125,7 @@ const addNewArtist = (post) => {
 
 // and a new series to the database from a POST request
 // POST req.body is taken as the parameter.  POST is handled
-// by the body-parser middleware
+// by the body-parser middle-ware
 const addNewSeries = (post) => {
 	// set up and return the promise
 	return new Promise ((resolve,reject) => {
@@ -244,7 +244,7 @@ const updateArtist = (put,id) => {
 }
 
 // function to update the series.  Takes the body from a 
-// put request that's parsed by the body-parser middleware
+// put request that's parsed by the body-parser middle-ware
 // and the series id as parameters
 const updateSeries = (put,id) => {
 
@@ -309,7 +309,7 @@ const getAllIssuesBySeriesId = (id) => {
 }
 
 // function to add a new issue to a series.  Takes the body
-// of a POST request (That's handled by the body parser middleware),
+// of a POST request (That's handled by the body parser middle-ware),
 // and adds it as an issue to a series
 const addNewIssue = (post,seriesId) => {
 	// set up the promise

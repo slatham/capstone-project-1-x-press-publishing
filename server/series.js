@@ -56,11 +56,11 @@ seriesRouter.param('id', async (req,res,next,id) => {
 });
 
 // set up the route for GET /api/series.  Note the route is
-// just '/' becuase we've mounted the router on top of the api
+// just '/' because we've mounted the router on top of the api
 // router then on the path /series
 seriesRouter.get('/', async (req,res,next) => {
 	// use Promise with async / await 
-	// syntax to deal with the asynchronus 
+	// syntax to deal with the asynchronous 
 	// database read, then return the results
 	try {
 		// try the promise and wait for it to return
@@ -98,7 +98,7 @@ seriesRouter.post('/', checkValidInput, async (req,res,next)=>{
 
 });
 
-// express route to delete a series.  Note the async becuase the 
+// express route to delete a series.  Note the async because the 
 // db deletion is done asynchronously via promises.
 seriesRouter.delete('/:id', async (req,res,next) => {
 

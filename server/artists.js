@@ -24,12 +24,12 @@ const checkValidInput = (req,res,next) => {
 		return res.status(400).send();
 	}
 
-	// continue to the next middleware
+	// continue to the next middle-ware
 	next();
 }
 
 // add a router.param to parse the id for /artist/:id
-// function is async becuase we use await to wait for
+// function is async because we use await to wait for
 // the promise to be returned from the db function call
 artistsRouter.param('id', async (req,res,next,id) => {
 	// get the artist by Id from the database
@@ -50,7 +50,7 @@ artistsRouter.param('id', async (req,res,next,id) => {
 		}
 	} catch (e) {
 		// catch any errors returned
-		return next(e); // send the error on to the next middleware
+		return next(e); // send the error on to the next middle-ware
 						// eventually it'll reach our error handler
 	}
 });
@@ -114,7 +114,7 @@ artistsRouter.delete('/:id', async (req,res,next) => {
 
 });
 
-// route to update an artist.  Note the middleware stack.  We first check the input,
+// route to update an artist.  Note the middle-ware stack.  We first check the input,
 // then run the callback function.
 artistsRouter.put('/:id', checkValidInput, async (req,res,next) => {
 
