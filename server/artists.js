@@ -1,15 +1,18 @@
 
+// This file handles all the express routing for artists route
+
 // require the sql file with all the
 // database functions
 const db = require('./sql');
 
-
-// set up the router
+// set up the artist router
 const artistsRouter = require('express').Router();
+// export it so it can be celled in the api.js file
 module.exports = artistsRouter;
 
+// helper function to check valid inputs
+// on POST and PUT requests
 const checkValidInput = (req,res,next) => {
-
 	// check we have all the supplied posted values
 	const name = req.body.artist.name;
 	const dateOfBirth = req.body.artist.dateOfBirth;
@@ -21,14 +24,14 @@ const checkValidInput = (req,res,next) => {
 		return res.status(400).send();
 	}
 
-	next()
-
-
+	// continue to the next middleware
+	next();
 }
 
-// add a router.param to parse the id
+// add a router.param to parse the id for /artist/:id
+// function is async becuase we use await to wait for
+// the promise to be returned from the db function call
 artistsRouter.param('id', async (req,res,next,id) => {
-
 	// get the artist by Id from the database
 	try {
 		// wait for the promise
@@ -38,7 +41,7 @@ artistsRouter.param('id', async (req,res,next,id) => {
 			// set the modelReturned on the request 
 			req.artistReturned = artistReturned;
 			// move on
-			next()
+			next();
 		} else {
 			// send the error to the error handler
 			const error = new Error('Artist Not Found');
@@ -46,37 +49,43 @@ artistsRouter.param('id', async (req,res,next,id) => {
 				return next(error);	// send the error on to the next middle-ware
 		}
 	} catch (e) {
-		// catch any errors
-		return next(e);
+		// catch any errors returned
+		return next(e); // send the error on to the next middleware
+						// eventually it'll reach our error handler
 	}
-
-	
 });
 
 // route for GET /api/artists
+// NOTE this function uses a call back instead
+// of using promises like the rest of the app
+// this is just for future reference.
 artistsRouter.get('/',(req,res,next) => {
-	
 	// run the db function and set a callback function
 	// to deal with the results afterwards
 	// this deals wit the asynchronous nature of the db request
-	db.getAllWorkingArtists(results => {
-
+	db.getAllWorkingArtists((error, results) => {
+		// if an error is set on the callback function
+		if (error) {
+			// send the error on towards our error handler
+			return next(error);
+		} else {
+		// everything is okay, return the artists object as json string
 		return res.status(200).json({artists: results});
-
+		}
 	});
 });
 
+// route to get an artist by ID
 artistsRouter.get('/:id',(req,res,next) => {
-
+	// This is handled by our param function above
+	// it sets the artist to an object on the request for us
+	// we simply have to return it here.
 	return res.status(200).json({artist:req.artistReturned});
-
 
 });
 
 // route to create a new artist
 artistsRouter.post('/', checkValidInput, async (req,res,next)=>{
-
-
 
 	try {
 		// try the promise and wait for it to return
@@ -85,11 +94,12 @@ artistsRouter.post('/', checkValidInput, async (req,res,next)=>{
 		return res.status(201).json({artist: results});
 	} catch (e) {
 		// send the error to the error handler middle-ware
-		next(e)
+		next(e)	
 	}
 
 });
 
+// route to delete an artist
 artistsRouter.delete('/:id', async (req,res,next) => {
 
 	try {
@@ -102,9 +112,10 @@ artistsRouter.delete('/:id', async (req,res,next) => {
 		next(e)
 	}
 
-
 });
 
+// route to update an artist.  Note the middleware stack.  We first check the input,
+// then run the callback function.
 artistsRouter.put('/:id', checkValidInput, async (req,res,next) => {
 
 	try {
@@ -116,7 +127,5 @@ artistsRouter.put('/:id', checkValidInput, async (req,res,next) => {
 		// send the error to the error handler middle-ware
 		next(e)
 	}
-
-
 
 });

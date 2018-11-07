@@ -20,14 +20,14 @@ app.use(morgan('dev'))
 // set up where we serve static content from
 app.use(express.static('public'));
 
-// Set up base router here.
+// Set up base api router here.
 const apiRouter = require('./server/api');
-// mount the router at the start of /api
+// mount the router at the start of /api route
 app.use('/api',apiRouter);
 
 // error handler - remember this has to be last to catch the errors!
 // it is recognised as error handling middle-ware because 
-//it takes 4 arguments
+// it takes 4 arguments
 app.use(function(error, req, res, next) {
   // deal with the error
   console.log(error);
